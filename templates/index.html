@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TVP BGM Controller</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .status {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+        }
+        .controls {
+            margin: 20px 0;
+        }
+        .volume-control {
+            margin: 20px 0;
+        }
+        .set-selection {
+            margin: 20px 0;
+        }
+        .set-buttons {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        .set-button {
+            padding: 10px 20px;
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .set-button.active {
+            background-color: #28a745;
+        }
+        .version-info {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #666;
+            font-size: 0.9em;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        input[type="range"] {
+            width: 100%;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>TVP BGM Controller</h1>
+        
+        <div class="status">
+            <h2>現在の状態</h2>
+            <p>再生状態: <span id="playing-status">停止中</span></p>
+            <p>現在のファイル: <span id="current-file">なし</span></p>
+            <p>現在のセット: <span id="current-set">1</span></p>
+        </div>
+
+        <div class="set-selection">
+            <h2>セット選択</h2>
+            <div class="set-buttons">
+                <button class="set-button" onclick="setSet(1)">セット 1</button>
+                <button class="set-button" onclick="setSet(2)">セット 2</button>
+                <button class="set-button" onclick="setSet(3)">セット 3</button>
+                <button class="set-button" onclick="setSet(4)">セット 4</button>
+            </div>
+        </div>
+
+        <div class="controls">
+            <h2>コントロール</h2>
+            <button id="stop-button" onclick="stopMusic()">再生停止</button>
+        </div>
+
+        <div class="volume-control">
+            <h2>音量調整</h2>
+            <input type="range" id="volume-slider" min="0" max="100" value="50" onchange="setVolume(this.value)">
+            <p>音量: <span id="volume-value">50</span>%</p>
+        </div>
+
+        <div class="version-info">
+            <p>Version: <span id="version">-</span></p>
+            <p>Author: <span id="author">-</span></p>
+        </div>
+    </div>
+
+    <script>
+        // 状態の更新
+        function updateStatus() {
+            fetch('/api/status')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('playing-status').textContent = data.is_playing ? '再生中' : '停止中';
+                    document.getElementById('current-file').textContent = data.current_file || 'なし';
+                    document.getElementById('volume-slider').value = data.volume * 100;
+                    document.getElementById('volume-value').textContent = Math.round(data.volume * 100);
+                    document.getElementById('stop-button').disabled = !data.is_playing;
+                    document.getElementById('version').textContent = data.version;
+                    document.getElementById('author').textContent = data.author;
+                    document.getElementById('current-set').textContent = data.current_set;
+                    
+                    // セットボタンのアクティブ状態を更新
+                    const setButtons = document.querySelectorAll('.set-button');
+                    setButtons.forEach(button => {
+                        const setNumber = parseInt(button.textContent.split(' ')[1]);
+                        if (setNumber === data.current_set) {
+                            button.classList.add('active');
+                        } else {
+                            button.classList.remove('active');
+                        }
+                    });
+                });
+        }
+
+        // 音量設定
+        function setVolume(value) {
+            const volume = value / 100;
+            fetch('/api/volume', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ volume: volume })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('volume-value').textContent = value;
+                }
+            });
+        }
+
+        // 再生停止
+        function stopMusic() {
+            fetch('/api/stop', {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    updateStatus();
+                }
+            });
+        }
+
+        // セット選択
+        function setSet(setNumber) {
+            fetch('/api/set', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ set: setNumber })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    updateStatus();
+                }
+            });
+        }
+
+        // 定期的に状態を更新
+        setInterval(updateStatus, 1000);
+        // 初期状態の更新
+        updateStatus();
+    </script>
+</body>
+</html> 
