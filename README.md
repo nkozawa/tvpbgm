@@ -1,6 +1,6 @@
 # TVP BGM Controller
 
-TVP BGM Controllerは、OSCメッセージをトリガーにしてMP3ファイルを再生するPythonアプリケーションです。レースイベントの開始時と終了時に異なる音楽を再生することができます。
+TVP BGM Controllerは、TinyView PlusからのOSCメッセージをトリガーにしてMP3ファイルを再生するPythonアプリケーションです。レースイベントの開始時と終了時に異なる音楽を再生することができます。
 
 ## 機能
 
