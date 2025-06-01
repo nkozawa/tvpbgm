@@ -4,6 +4,8 @@ TVP BGM Controllerは、TinyView PlusからのOSCメッセージをトリガー�
 
 このプログラムはvibe programingにより100% AIによりコーティングしました。このREADMEも90%はAIによるものです。
 
+このプログラムのアイデアはninjaMoonLight師匠(<https://x.com/masaaki_oyama>)によるものです。
+
 ## 機能
 
 - OSCメッセージによる自動再生
