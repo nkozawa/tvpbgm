@@ -2,6 +2,8 @@
 
 TVP BGM Controllerは、TinyView PlusからのOSCメッセージをトリガーにしてMP3ファイルを再生するPythonアプリケーションです。レースイベントの開始時と終了時に異なる音楽を再生することができます。
 
+このプログラムはvibe programingにより100% AIによりコーティングしました。このREADMEも90%はAIによるものです。
+
 ## 機能
 
 - OSCメッセージによる自動再生
@@ -25,6 +27,8 @@ TVP BGM Controllerは、TinyView PlusからのOSCメッセージをトリガー�
   - flask
 
 ## インストール
+
+releaseページにWindowsとMacOS用のバイナリーも用意しました。こちらは特別なインストール作業は必要ありません、そのまま実行出来ます。
 
 1. リポジトリをクローン
 ```bash
