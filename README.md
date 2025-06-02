@@ -2,7 +2,7 @@
 
 TVP BGM Controllerは、OSCメッセージをトリガーにしてMP3ファイルを再生するPythonアプリケーションです。レースイベントの開始時と終了時に異なる音楽を再生することができます。
 
-このプログラムはvibe programingにより100% AIによりコーティングしました。このREADMEも90%はAIによるものです。
+このプログラムは無課金vibe programingにより100% AIによりコーティングしました。このREADMEも90%はAIによるものです。
 
 このプログラムのアイデアはninjaMoonLight師匠(<https://x.com/
 masaaki_oyama>)によるものです。
