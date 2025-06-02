@@ -39,7 +39,7 @@ tvpbgm/
 python tvpbgm.py
 ```
 
-2. ブラウザで `http://localhost:5000` にアクセス
+2. ブラウザで `http://localhost:5740` にアクセス、同一ネット内の他のPCからのアクセスも可能
 
 3. Web UIから以下の操作が可能:
    - セットの選択（1-4）
